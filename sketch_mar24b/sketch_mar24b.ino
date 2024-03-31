@@ -43,6 +43,10 @@ float ballSpeedY = random(-3.0, 3.0);
 
 boolean blocks[4][12]; // true: blok var, false: blok yok
 
+void exitscreen();
+void initscreen();
+void game();
+
 void setup() {
   pinMode(potPin, INPUT);
   pinMode(button1Pin, INPUT);
@@ -69,7 +73,7 @@ void setup() {
 }
 
 void loop() {
-    gamestarted = 0;
+    //gamestarted = 0;
     switch (gamestarted){
       case 0:
         initscreen();
@@ -77,58 +81,13 @@ void loop() {
       case 1:
         game();
         break;
+      case 2:
+        //exitscreen();
+        break;
     }
 }
 
-void initscreen() {
-  display.clearDisplay();
-  
-  display.setCursor(40, 20);
-  display.setTextColor(WHITE);
-  display.setTextSize(1);
-  display.print("Start");
-  
-  /*if (digitalRead(button1Pin) == LOW) {
-    choice1 = 1;
-    choice2 = 0;    
-  } else {
-    choice1 = 0;
-  }
-
-  if (digitalRead(button2Pin) == LOW) {
-    choice2 = 1;
-    choice1 = 0;  
-  } else {
-    choice2 = 0;
-  }
-
-  if (choice1 == 1) {
-    display.drawRect(32, 15, 60, 17, WHITE);
-  }*/
-  
-  display.setCursor(40, 40);
-  display.setTextColor(WHITE);
-  display.setTextSize(1);
-  display.print("Exit");
-  
-  if (choice2 == 1) {
-    display.drawRect(32, 35, 60, 17, WHITE);
-  }
-
- /* if (choice1 == 1 && digitalRead(button3Pin) == LOW) {
-    gamestarted = 1;
-  }
-
-  if (choice2 == 1 && digitalRead(button3Pin) == LOW) {
-    gamestarted = 0;
-    exitscreen();
-  }*/
-  
-  display.display();
-}
-
-
-void exitscreen(){
+void exitscreen() {
   display.clearDisplay();
   
   display.setCursor(35, 20);
@@ -141,11 +100,72 @@ void exitscreen(){
   display.print("icin tesekkurler");
 
   display.display();
-
-  while(1){
-
-  }
 }
+
+
+void initscreen() {
+  display.clearDisplay();
+  
+  display.setCursor(40, 20);
+  display.setTextColor(WHITE);
+  display.setTextSize(1);
+  display.print("Start");
+  
+  if (digitalRead(8) == HIGH) {
+    choice1 = 1;
+    choice2 = 0;    
+  }
+
+  if (digitalRead(10) == HIGH) {
+    choice2 = 1;
+    choice1 = 0;  
+  } 
+  if(digitalRead(9) == HIGH){
+    choice3 = 1;
+  }
+  else{
+    choice3 = 0;
+  }
+
+  if (choice1 == 1) {
+    display.drawRect(32, 15, 60, 17, WHITE);
+  }
+  
+  display.setCursor(40, 40);
+  display.setTextColor(WHITE);
+  display.setTextSize(1);
+  display.print("Exit");
+  
+  if (choice2 == 1) {
+    display.drawRect(32, 35, 60, 17, WHITE);
+  }
+
+  if(choice3 == 1){
+    if(choice1 ==1){
+      gamestarted = 1;
+      choice1 = 0;
+      choice3 = 0;
+    }
+    else if(choice2 == 1){
+      gamestarted = 2;
+    }
+  }
+
+  /*if (choice1 == 1 && choice3 == 1) {
+    gamestarted = 1;
+    choice1 = 0;
+    choice3 = 0;
+  }
+
+  if (choice2 == 1 && choice3 == 1) {
+    
+  }*/
+  
+  display.display();
+}
+
+
+
 
 void game()
 {
@@ -232,9 +252,11 @@ void game()
         ballSpeedY = 0;
       }
       hak -= 1;
-      if(hak == -1)
+      if(hak == -1){
         display.print("Game Over");
         display.clearDisplay();
+      }
+        
       delay(1000);
     }
     display.fillCircle(ballX, ballY, ballRadius, SSD1306_WHITE);
