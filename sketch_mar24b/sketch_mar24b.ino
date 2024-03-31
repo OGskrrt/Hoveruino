@@ -17,9 +17,14 @@ int ledPin2 = 28;
 int ledPin3 = 29;
 int hak = 3;
 
+int score = 0;
+
 int button1Pin = 8;
 int button2Pin = 10;
 int button3Pin = 9;
+
+int birlerbasamak7segmentbaslangicpin = 40;
+int onlarbasamak7segmentbaslangicpin = 47;
 
 int arri[4][12];
 int arrj[4][12];
@@ -55,6 +60,12 @@ void setup() {
   pinMode(ledPin1, OUTPUT);
   pinMode(ledPin2, OUTPUT);
   pinMode(ledPin3, OUTPUT);
+
+  for(int i=0;i<7;i++){
+    
+    pinMode(onlarbasamak7segmentbaslangicpin+i,OUTPUT);
+    pinMode(birlerbasamak7segmentbaslangicpin+i,OUTPUT);
+  }
 
   Serial.begin(9600);
 
@@ -93,6 +104,7 @@ void loop() {
         display.display();
         break;
     }
+    yedisegmentdisplayeyaz(score);
 }
 
 void initscreen() {
@@ -175,7 +187,8 @@ void game()
     display.setCursor(10, 20);
     display.print("     Game Over");
     display.setCursor(10, 30);
-    display.print("   Your Score: 0");
+    display.print("   Your Score:");
+    display.print(score);
     display.display();
     delay(5000);
     gamestarted = 0;
@@ -234,6 +247,7 @@ void game()
           }
           blocks[i][j] = false;
           collided = true;
+          score++;
         }
       }
     }
@@ -274,4 +288,124 @@ void game()
   display.fillCircle(ballX, ballY, ballRadius, SSD1306_WHITE);
 
   display.display();
+}
+
+void yedisegmentdisplaycalistir(int sayi,int displaybaslangici){
+  // Yedi segment display'inin her bir segmentini temsil eden pinlerin belirlenmesi
+  int aPin = displaybaslangici;
+  int bPin = displaybaslangici + 1;
+  int cPin = displaybaslangici + 2;
+  int dPin = displaybaslangici + 3;
+  int ePin = displaybaslangici + 4;
+  int fPin = displaybaslangici + 5;
+  int gPin = displaybaslangici + 6;
+
+  // Rakamlara göre segment pinlerinin açılması veya kapatılması
+  switch(sayi) {
+    case 0:
+      digitalWrite(aPin, HIGH);
+      digitalWrite(bPin, HIGH);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, HIGH);
+      digitalWrite(ePin, HIGH);
+      digitalWrite(fPin, HIGH);
+      digitalWrite(gPin, LOW);
+      break;
+    case 1:
+      digitalWrite(aPin, LOW);
+      digitalWrite(bPin, HIGH);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, LOW);
+      digitalWrite(ePin, LOW);
+      digitalWrite(fPin, LOW);
+      digitalWrite(gPin, LOW);
+      break;
+    case 2:
+      digitalWrite(aPin, HIGH);
+      digitalWrite(bPin, HIGH);
+      digitalWrite(cPin, LOW);
+      digitalWrite(dPin, HIGH);
+      digitalWrite(ePin, HIGH);
+      digitalWrite(fPin, LOW);
+      digitalWrite(gPin, HIGH);
+      break;
+    case 3:
+      digitalWrite(aPin, HIGH);
+      digitalWrite(bPin, HIGH);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, HIGH);
+      digitalWrite(ePin, LOW);
+      digitalWrite(fPin, LOW);
+      digitalWrite(gPin, HIGH);
+      break;
+    case 4:
+      digitalWrite(aPin, LOW);
+      digitalWrite(bPin, HIGH);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, LOW);
+      digitalWrite(ePin, LOW);
+      digitalWrite(fPin, HIGH);
+      digitalWrite(gPin, HIGH);
+      break;
+    case 5:
+      digitalWrite(aPin, HIGH);
+      digitalWrite(bPin, LOW);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, HIGH);
+      digitalWrite(ePin, LOW);
+      digitalWrite(fPin, HIGH);
+      digitalWrite(gPin, HIGH);
+      break;
+    case 6:
+      digitalWrite(aPin, HIGH);
+      digitalWrite(bPin, LOW);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, HIGH);
+      digitalWrite(ePin, HIGH);
+      digitalWrite(fPin, HIGH);
+      digitalWrite(gPin, HIGH);
+      break;
+    case 7:
+      digitalWrite(aPin, HIGH);
+      digitalWrite(bPin, HIGH);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, LOW);
+      digitalWrite(ePin, LOW);
+      digitalWrite(fPin, LOW);
+      digitalWrite(gPin, LOW);
+      break;
+    case 8:
+      digitalWrite(aPin, HIGH);
+      digitalWrite(bPin, HIGH);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, HIGH);
+      digitalWrite(ePin, HIGH);
+      digitalWrite(fPin, HIGH);
+      digitalWrite(gPin, HIGH);
+      break;
+    case 9:
+      digitalWrite(aPin, HIGH);
+      digitalWrite(bPin, HIGH);
+      digitalWrite(cPin, HIGH);
+      digitalWrite(dPin, HIGH);
+      digitalWrite(ePin, LOW);
+      digitalWrite(fPin, HIGH);
+      digitalWrite(gPin, HIGH);
+      break;
+    default:
+      break;
+  }
+}
+
+void yedisegmentdisplayeyaz(int sayi){
+  if(sayi > -1 && sayi < 1000){
+    int birler = sayi % 10; // birler basamağındaki rakamı al
+    int onlar = (sayi / 10) % 10; // onlar basamağındaki rakamı al
+    
+    yedisegmentdisplaycalistir(birler, birlerbasamak7segmentbaslangicpin);
+    yedisegmentdisplaycalistir(onlar, onlarbasamak7segmentbaslangicpin);
+  }
+  else{
+    Serial.println("7 Segment display için hatalı sayı girildi");
+  }
 }
