@@ -110,6 +110,7 @@ void loop() {
 void initscreen() {
   display.clearDisplay();
   
+  score = 0;
   display.setCursor(40, 20);
   display.setTextColor(WHITE);
   display.setTextSize(1);
@@ -302,99 +303,100 @@ void yedisegmentdisplaycalistir(int sayi,int displaybaslangici){
 
   // Rakamlara göre segment pinlerinin açılması veya kapatılması
   switch(sayi) {
-    case 0:
-      digitalWrite(aPin, HIGH);
-      digitalWrite(bPin, HIGH);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, HIGH);
-      digitalWrite(ePin, HIGH);
-      digitalWrite(fPin, HIGH);
-      digitalWrite(gPin, LOW);
-      break;
-    case 1:
-      digitalWrite(aPin, LOW);
-      digitalWrite(bPin, HIGH);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, LOW);
-      digitalWrite(ePin, LOW);
-      digitalWrite(fPin, LOW);
-      digitalWrite(gPin, LOW);
-      break;
-    case 2:
-      digitalWrite(aPin, HIGH);
-      digitalWrite(bPin, HIGH);
-      digitalWrite(cPin, LOW);
-      digitalWrite(dPin, HIGH);
-      digitalWrite(ePin, HIGH);
-      digitalWrite(fPin, LOW);
-      digitalWrite(gPin, HIGH);
-      break;
-    case 3:
-      digitalWrite(aPin, HIGH);
-      digitalWrite(bPin, HIGH);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, HIGH);
-      digitalWrite(ePin, LOW);
-      digitalWrite(fPin, LOW);
-      digitalWrite(gPin, HIGH);
-      break;
-    case 4:
-      digitalWrite(aPin, LOW);
-      digitalWrite(bPin, HIGH);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, LOW);
-      digitalWrite(ePin, LOW);
-      digitalWrite(fPin, HIGH);
-      digitalWrite(gPin, HIGH);
-      break;
-    case 5:
-      digitalWrite(aPin, HIGH);
-      digitalWrite(bPin, LOW);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, HIGH);
-      digitalWrite(ePin, LOW);
-      digitalWrite(fPin, HIGH);
-      digitalWrite(gPin, HIGH);
-      break;
-    case 6:
-      digitalWrite(aPin, HIGH);
-      digitalWrite(bPin, LOW);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, HIGH);
-      digitalWrite(ePin, HIGH);
-      digitalWrite(fPin, HIGH);
-      digitalWrite(gPin, HIGH);
-      break;
-    case 7:
-      digitalWrite(aPin, HIGH);
-      digitalWrite(bPin, HIGH);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, LOW);
-      digitalWrite(ePin, LOW);
-      digitalWrite(fPin, LOW);
-      digitalWrite(gPin, LOW);
-      break;
-    case 8:
-      digitalWrite(aPin, HIGH);
-      digitalWrite(bPin, HIGH);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, HIGH);
-      digitalWrite(ePin, HIGH);
-      digitalWrite(fPin, HIGH);
-      digitalWrite(gPin, HIGH);
-      break;
-    case 9:
-      digitalWrite(aPin, HIGH);
-      digitalWrite(bPin, HIGH);
-      digitalWrite(cPin, HIGH);
-      digitalWrite(dPin, HIGH);
-      digitalWrite(ePin, LOW);
-      digitalWrite(fPin, HIGH);
-      digitalWrite(gPin, HIGH);
-      break;
-    default:
-      break;
-  }
+  case 0:
+    digitalWrite(aPin, LOW);
+    digitalWrite(bPin, LOW);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, LOW);
+    digitalWrite(ePin, LOW);
+    digitalWrite(fPin, LOW);
+    digitalWrite(gPin, HIGH);
+    break;
+  case 1:
+    digitalWrite(aPin, HIGH);
+    digitalWrite(bPin, LOW);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, HIGH);
+    digitalWrite(ePin, HIGH);
+    digitalWrite(fPin, HIGH);
+    digitalWrite(gPin, HIGH);
+    break;
+  case 2:
+    digitalWrite(aPin, LOW);
+    digitalWrite(bPin, LOW);
+    digitalWrite(cPin, HIGH);
+    digitalWrite(dPin, LOW);
+    digitalWrite(ePin, LOW);
+    digitalWrite(fPin, HIGH);
+    digitalWrite(gPin, LOW);
+    break;
+  case 3:
+    digitalWrite(aPin, LOW);
+    digitalWrite(bPin, LOW);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, LOW);
+    digitalWrite(ePin, HIGH);
+    digitalWrite(fPin, HIGH);
+    digitalWrite(gPin, LOW);
+    break;
+  case 4:
+    digitalWrite(aPin, HIGH);
+    digitalWrite(bPin, LOW);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, HIGH);
+    digitalWrite(ePin, HIGH);
+    digitalWrite(fPin, LOW);
+    digitalWrite(gPin, LOW);
+    break;
+  case 5:
+    digitalWrite(aPin, LOW);
+    digitalWrite(bPin, HIGH);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, LOW);
+    digitalWrite(ePin, HIGH);
+    digitalWrite(fPin, LOW);
+    digitalWrite(gPin, LOW);
+    break;
+  case 6:
+    digitalWrite(aPin, LOW);
+    digitalWrite(bPin, HIGH);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, LOW);
+    digitalWrite(ePin, LOW);
+    digitalWrite(fPin, LOW);
+    digitalWrite(gPin, LOW);
+    break;
+  case 7:
+    digitalWrite(aPin, LOW);
+    digitalWrite(bPin, LOW);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, HIGH);
+    digitalWrite(ePin, HIGH);
+    digitalWrite(fPin, HIGH);
+    digitalWrite(gPin, HIGH);
+    break;
+  case 8:
+    digitalWrite(aPin, LOW);
+    digitalWrite(bPin, LOW);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, LOW);
+    digitalWrite(ePin, LOW);
+    digitalWrite(fPin, LOW);
+    digitalWrite(gPin, LOW);
+    break;
+  case 9:
+    digitalWrite(aPin, LOW);
+    digitalWrite(bPin, LOW);
+    digitalWrite(cPin, LOW);
+    digitalWrite(dPin, LOW);
+    digitalWrite(ePin, HIGH);
+    digitalWrite(fPin, LOW);
+    digitalWrite(gPin, LOW);
+    break;
+  default:
+    break;
+}
+
 }
 
 void yedisegmentdisplayeyaz(int sayi){
