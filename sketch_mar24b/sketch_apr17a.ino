@@ -43,10 +43,41 @@ int choice3 = 0;
 int ballX = SCREEN_WIDTH / 2;
 int ballY = SCREEN_HEIGHT / 2;
 int ballRadius = 2;
-float ballSpeedX = random(-3.0, 3.0);
+float ballSpeedX = 2;
 float ballSpeedY = random(-3.0, 3.0);
 
-boolean blocks[4][12]; // true: blok var, false: blok yok
+bool heartActive = false; // Item aktif mi kontrolü
+int heartX, heartY; // Item'ın konumu
+int heartWidth = 4; // Item'ın genişliği
+int heartHeight = 4; // Item'ın yüksekliği
+const float heartFallSpeed = 1.0; // Item'ın düşme hızı
+
+boolean blocks[4][12];
+
+void dropHeart(int x, int y) {
+    if (random(100) < 50) { // %10 ihtimal ile can item'ı düşür
+        heartActive = true; // Kalbin aktif olduğunu belirt
+        heartX = x + rectWidth / 2 - heartWidth / 2; // Bloğun ortasından başlasın
+        heartY = y + rectHeight; // Tuğlanın hemen altından başlar
+        Serial.println("Heart dropped."); // Debug için kalp düştüğünde bilgi ver
+    }
+}
+
+void collectHeart() {
+    if (heartActive) {
+        heartY += heartFallSpeed; // Kalbi aşağı doğru düşür
+        if (heartY > hoverY - heartHeight && heartY < hoverY + hoverHeight &&
+            heartX > hoverX && heartX < hoverX + hoverWidth) {
+            hak++;
+            heartActive = false;
+            Serial.println("Heart collected.");
+        }
+        else if (heartY >= SCREEN_HEIGHT) {
+            heartActive = false; // Ekrandan çıktıysa kalbi devre dışı bırak
+            Serial.println("Heart missed."); // Debug için kalp kaçırıldığında bilgi ver
+        }
+    }
+}
 
 void exitscreen();
 void initscreen();
@@ -225,9 +256,11 @@ void game()
   }
 
   //tuğlaya çarpma
-  bool collided = false;
-  for(int i = 0; i < 4 && !collided; i++) {
-    for(int j = 0; j < 12 && !collided; j++) {
+  int collided_i = -1;
+  int collided_j = -1;
+  
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 12; j++) {
       if (blocks[i][j]) {
         float left = arrj[i][j] - ballRadius;
         float right = arrj[i][j] + rectWidth + ballRadius;
@@ -244,11 +277,15 @@ void game()
           if (dx < dy) {
             ballSpeedX = -ballSpeedX;
           } else {
-            ballSpeedY = -ballSpeedY;
+            if(ballSpeedY > 0)
+              continue;
+            else
+              ballSpeedY = -ballSpeedY;
           }
           blocks[i][j] = false;
-          collided = true;
           score++;
+          dropHeart(arrj[i][j], arri[i][j]);
+          break;  // Bir çarpışma bulunduğunda döngüyü kır
         }
       }
     }
@@ -257,19 +294,34 @@ void game()
   // hoverdan sekme
   if(ballX + ballRadius >= hoverX && ballX - ballRadius <= hoverX + hoverWidth &&
     ballY + ballRadius >= hoverY && ballY - ballRadius <= hoverY + hoverHeight) {
-        ballSpeedX = random(-3.0, 3.0);
-        if(ballSpeedX == 1)
-          ballSpeedX += 1;
-        if(ballSpeedX == -1)
-          ballSpeedX -= 1;
-        ballSpeedY = -ballSpeedY;
+    int random_num = random(0, 2);
+    if(ballSpeedX < 0)
+    {
+      if(random_num == 0)
+        ballSpeedX = -2;
+      else
+        ballSpeedX = -3;
+    }
+    else
+    {
+      if(random_num == 0)
+        ballSpeedX = 2;
+      else
+        ballSpeedX = 3;
+    }
+    ballSpeedY = -ballSpeedY;
   }
+  collectHeart();
+
+  if (heartActive) {
+        display.fillRect(heartX, heartY, heartWidth, heartHeight, WHITE);
+    }
 
   //tabana çarpıp canın gitmesi
   if (ballY + ballRadius >= SCREEN_HEIGHT) {
-    if (millis() - lastHitTime >= delayTime) { // Belirli bir süre geçti mi kontrol et
+    if (millis() - lastHitTime >= delayTime) {
       lastHitTime = millis(); // En son çarpma zamanını güncelle
-      ballX = SCREEN_WIDTH / 2; // Topu başlangıç pozisyonuna yerleştir
+      ballX = SCREEN_WIDTH / 2;
       ballY = SCREEN_HEIGHT / 2;
       delayTime = 0;
       ballSpeedX = 2.0;
