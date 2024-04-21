@@ -16,8 +16,12 @@ int ledPin1 = 27;
 int ledPin2 = 28;
 int ledPin3 = 29;
 int hak = 3;
-
+int stage_no = 1;
 int score = 0;
+
+int ldrread;
+int color1;
+int color2;
 
 int button1Pin = 8;
 int button2Pin = 10;
@@ -43,23 +47,22 @@ int choice3 = 0;
 int ballX = SCREEN_WIDTH / 2;
 int ballY = SCREEN_HEIGHT / 2;
 int ballRadius = 2;
-float ballSpeedX = 2;
-float ballSpeedY = random(-3.0, 3.0);
+float ballSpeedX = 2.0;
+float ballSpeedY = 3.0;
 
-bool heartActive = false; // Item aktif mi kontrolü
-int heartX, heartY; // Item'ın konumu
-int heartWidth = 4; // Item'ın genişliği
-int heartHeight = 4; // Item'ın yüksekliği
-const float heartFallSpeed = 1.0; // Item'ın düşme hızı
+bool heartActive = false;
+int heartX, heartY;
+int heartWidth = 4;
+int heartHeight = 4;
+const float heartFallSpeed = 1.0;
 
 boolean blocks[4][12];
 
 void dropHeart(int x, int y) {
-    if (random(100) < 50) { // %10 ihtimal ile can item'ı düşür
-        heartActive = true; // Kalbin aktif olduğunu belirt
-        heartX = x + rectWidth / 2 - heartWidth / 2; // Bloğun ortasından başlasın
-        heartY = y + rectHeight; // Tuğlanın hemen altından başlar
-        Serial.println("Heart dropped."); // Debug için kalp düştüğünde bilgi ver
+    if (random(100) < 10) { // %10 ihtimal ile can item'i düşür
+        heartActive = true;
+        heartX = x + rectWidth / 2 - heartWidth / 2;
+        heartY = y + rectHeight;
     }
 }
 
@@ -68,13 +71,16 @@ void collectHeart() {
         heartY += heartFallSpeed; // Kalbi aşağı doğru düşür
         if (heartY > hoverY - heartHeight && heartY < hoverY + hoverHeight &&
             heartX > hoverX && heartX < hoverX + hoverWidth) {
-            hak++;
+            if(hak == 3)
+              hak += 0;
+            else
+              hak++;
             heartActive = false;
             Serial.println("Heart collected.");
         }
         else if (heartY >= SCREEN_HEIGHT) {
-            heartActive = false; // Ekrandan çıktıysa kalbi devre dışı bırak
-            Serial.println("Heart missed."); // Debug için kalp kaçırıldığında bilgi ver
+            heartActive = false;
+            Serial.println("Heart missed.");
         }
     }
 }
@@ -82,6 +88,39 @@ void collectHeart() {
 void exitscreen();
 void initscreen();
 void game();
+
+void startNextLevel() {
+  stage_no++;
+  setupNextLevel();
+  display.clearDisplay();
+  display.setCursor(40, 20);
+  display.setTextColor(color2);
+  display.setTextSize(1);
+
+  char buffer[30]; // Yeterli büyüklükte bir buffer oluşturduk
+  sprintf(buffer, "Starting\nLevel %d...", stage_no); // Buffer'a formatlı metni yazdık
+
+  display.print(buffer);
+  display.display();
+  delay(5000);  // 5 saniye bekleme
+  ballSpeedY *= 2;
+  gamestarted = 1;  // Oyunu 2. bölüme başlat
+}
+
+void setupNextLevel() {
+  // 2. bölüm için tuğla dizaynını ayarla
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 12; j++) {
+      if (i % 2 == 0) {  // Örneğin çift satırlarda tuğlalar farklı bir düzenle olsun
+        blocks[i][j] = (j % 2 == 0);  // Her çift sütunda tuğla olsun
+      } else {
+        blocks[i][j] = (j % 2 != 0);  // Her tek sütunda tuğla olsun
+      }
+      arrj[i][j] = j * (rectWidth + 1);
+      arri[i][j] = i * (rectHeight + 1);
+    }
+  }
+}
 
 void setup() {
   pinMode(potPin, INPUT);
@@ -118,18 +157,34 @@ void setup() {
 }
 
 void loop() {
-    //gamestarted = 0;
+    ldrread = analogRead(A4);
+    if(ldrread>50){
+      color1 = WHITE;
+      color2 = BLACK;
+
+      
+    }
+    else{
+      color1 = BLACK;
+      color2 = WHITE;
+    }
     switch (gamestarted){
       case 0:
+        display.clearDisplay();
+        display.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color1);
         initscreen();
         break;
       case 1:
+        display.clearDisplay();
+        display.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color1);
         game();
         break;
       case 2:
         display.clearDisplay();
+        display.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color1);
+        display.clearDisplay();
         display.setCursor(20, 20);
-        display.setTextColor(WHITE);
+        display.setTextColor(color2);
         display.setTextSize(1);
         display.print("  Tesekkurler");
         display.display();
@@ -139,11 +194,10 @@ void loop() {
 }
 
 void initscreen() {
-  display.clearDisplay();
   
   score = 0;
   display.setCursor(40, 20);
-  display.setTextColor(WHITE);
+  display.setTextColor(color2);
   display.setTextSize(1);
   display.print(" Start");
   
@@ -164,16 +218,16 @@ void initscreen() {
   }
 
   if (choice1 == 1) {
-    display.drawRect(32, 15, 60, 17, WHITE);
+    display.drawRect(32, 15, 60, 17, color2);
   }
   
   display.setCursor(40, 40);
-  display.setTextColor(WHITE);
+  display.setTextColor(color2);
   display.setTextSize(1);
   display.print("  Exit");
   
   if (choice2 == 1) {
-    display.drawRect(32, 35, 60, 17, WHITE);
+    display.drawRect(32, 35, 60, 17, color2);
   }
 
   if(choice3 == 1){
@@ -191,7 +245,6 @@ void initscreen() {
 
 void game()
 {
-  display.clearDisplay();
   if (hak == 3) {
     digitalWrite(ledPin1, HIGH);
     digitalWrite(ledPin2, HIGH);
@@ -214,7 +267,7 @@ void game()
   } 
   if (hak == -1) {
     display.clearDisplay();
-    display.setTextColor(WHITE);
+    display.setTextColor(color2);
     display.setTextSize(1);
     display.setCursor(10, 20);
     display.print("     Game Over");
@@ -225,6 +278,14 @@ void game()
     delay(5000);
     gamestarted = 0;
     hak = 3;
+    stage_no = 1;
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 12; j++) {
+        blocks[i][j] = true;
+        arrj[i][j] = j * (rectWidth + 1);
+        arri[i][j] = i * (rectHeight + 1);
+      }
+  }
     loop();
   }
   for(int i = 0;i < 4; i++)
@@ -232,7 +293,7 @@ void game()
     for(int j = 0;j < 12; j++)
     {
       if (blocks[i][j]) { // Eğer blok varsa, çiz
-        display.fillRect(arrj[i][j] + 10, arri[i][j] + 1, rectWidth, rectHeight, SSD1306_WHITE);
+        display.fillRect(arrj[i][j] + 10, arri[i][j] + 1, rectWidth, rectHeight, color2);
       }
     }
   }
@@ -241,7 +302,7 @@ void game()
   int potValue = analogRead(potPin);
   float x = (float)potValue / 1023.0 * (SCREEN_WIDTH - hoverWidth);
   hoverX = round(x);
-  display.fillRect(hoverX, hoverY, hoverWidth, hoverHeight, SSD1306_WHITE);
+  display.fillRect(hoverX, hoverY, hoverWidth, hoverHeight, color2);
 
   ballX += ballSpeedX;
   ballY += ballSpeedY;
@@ -291,6 +352,21 @@ void game()
     }
   }
 
+  bool allDestroyed = true;
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 12; j++) {
+      if (blocks[i][j]) {
+        allDestroyed = false;
+        break;
+      }
+    }
+    if (!allDestroyed) break;
+  }
+
+  if (allDestroyed && stage_no == 1) {
+    startNextLevel();
+  }
+
   // hoverdan sekme
   if(ballX + ballRadius >= hoverX && ballX - ballRadius <= hoverX + hoverWidth &&
     ballY + ballRadius >= hoverY && ballY - ballRadius <= hoverY + hoverHeight) {
@@ -314,7 +390,7 @@ void game()
   collectHeart();
 
   if (heartActive) {
-        display.fillRect(heartX, heartY, heartWidth, heartHeight, WHITE);
+        display.fillRect(heartX, heartY, heartWidth, heartHeight, color2);
     }
 
   //tabana çarpıp canın gitmesi
@@ -338,7 +414,7 @@ void game()
       
     delay(1000);
   }
-  display.fillCircle(ballX, ballY, ballRadius, SSD1306_WHITE);
+  display.fillCircle(ballX, ballY, ballRadius, color2);
 
   display.display();
 }
