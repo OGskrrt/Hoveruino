@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a simple brick-breaking game using Arduino and an OLED display. The game involves controlling a ball to break bricks on the screen, earning points, and avoiding losing lives.
+This project implements a simple brick-breaking game using Arduino and an OLED display. The game involves controlling a ball to break bricks on the screen, earning points and avoiding losing lives.
 
 ## Features
 
@@ -11,7 +11,7 @@ This project implements a simple brick-breaking game using Arduino and an OLED d
 - **Brick Breaking:** Bricks randomly placed on the screen, break them using the ball.
 - **Scoring:** Seven-segment display shows the player's score.
 - **Lives:** Player starts with three lives, lose one for each missed ball.
-- **Rewards:** Chance of dropping a heart object with each broken brick, increasing the player's life.
+- **Rewards:** Chance of dropping a heart object with each broken brick, increases player's life.
 - **Ambient Light Detection:** Background color changes based on ambient light detected by a light-dependent resistor (LDR).
 - **Progressive Difficulty:** Ball speed increases with each level passed.
 
@@ -46,17 +46,14 @@ Contributions to improve the game code, add new features, or optimize performanc
 
 ## Sample Proteus Circuit Images
 
-<div style="text-align:center;">
-    ![Screenshot 2024-04-21 151319](https://github.com/OGskrrt/Hoveruino/assets/135557803/ac8234ec-4faf-46bb-80c0-8ed8fb31f9ce)
-    ![Screenshot 2024-04-21 151342](https://github.com/OGskrrt/Hoveruino/assets/135557803/cbd592cf-0618-4b30-be37-da6e6ca935ac)
-</div>
+![Screenshot 2024-04-21 151319](https://github.com/OGskrrt/Hoveruino/assets/135557803/ac8234ec-4faf-46bb-80c0-8ed8fb31f9ce)
+![Screenshot 2024-04-21 151342](https://github.com/OGskrrt/Hoveruino/assets/135557803/cbd592cf-0618-4b30-be37-da6e6ca935ac)
+
 
 ## In Game Images
 
-<div style="display: flex; justify-content: center;">
-    ![Screenshot 2024-04-21 151715](https://github.com/OGskrrt/Hoveruino/assets/135557803/63f53517-b07a-4c19-b10a-4de03f352bee)
-    ![Screenshot 2024-04-21 151647](https://github.com/OGskrrt/Hoveruino/assets/135557803/ff0207ad-5b31-4ee6-866e-8e343f779a9b)
-    ![Screenshot 2024-04-21 151626](https://github.com/OGskrrt/Hoveruino/assets/135557803/90eb07e2-8f85-47c3-9c5f-81bd1631864b)
-    ![Screenshot 2024-04-21 151543](https://github.com/OGskrrt/Hoveruino/assets/135557803/e1a7f4d4-094b-4560-ba84-71ff824b0a45)
-    ![Screenshot 2024-04-21 151413](https://github.com/OGskrrt/Hoveruino/assets/135557803/c96b6c12-cd6c-4c61-bd26-35b52975f638)
-</div>
+![Screenshot 2024-04-21 151715](https://github.com/OGskrrt/Hoveruino/assets/135557803/63f53517-b07a-4c19-b10a-4de03f352bee)
+![Screenshot 2024-04-21 151647](https://github.com/OGskrrt/Hoveruino/assets/135557803/ff0207ad-5b31-4ee6-866e-8e343f779a9b)
+![Screenshot 2024-04-21 151626](https://github.com/OGskrrt/Hoveruino/assets/135557803/90eb07e2-8f85-47c3-9c5f-81bd1631864b)
+![Screenshot 2024-04-21 151543](https://github.com/OGskrrt/Hoveruino/assets/135557803/e1a7f4d4-094b-4560-ba84-71ff824b0a45)
+![Screenshot 2024-04-21 151413](https://github.com/OGskrrt/Hoveruino/assets/135557803/c96b6c12-cd6c-4c61-bd26-35b52975f638)
