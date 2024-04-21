@@ -1,4 +1,4 @@
-# Arduino Brick Breaker Game
+# Arduino Breakout Game
 
 ## Overview
 
