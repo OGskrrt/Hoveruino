@@ -91,31 +91,32 @@ void game();
 
 void startNextLevel() {
   stage_no++;
+  if (stage_no > 3) {  // Maksimum level sayısını kontrol et
+    // Oyun bitirme ya da başka bir işlem yapma
+    Serial.println("Oyun Bitti, Tüm Leveller Tamamlandı!");
+    gamestarted = 2;  // Oyunu bitir
+    return;
+  }
   setupNextLevel();
   display.clearDisplay();
   display.setCursor(40, 20);
   display.setTextColor(color2);
   display.setTextSize(1);
-
-  char buffer[30]; // Yeterli büyüklükte bir buffer oluşturduk
-  sprintf(buffer, "Starting\nLevel %d...", stage_no); // Buffer'a formatlı metni yazdık
-
+  display.print("Starting\n");
+  char buffer[30];
+  sprintf(buffer, "      Level %d...", stage_no);
   display.print(buffer);
   display.display();
-  delay(5000);  // 5 saniye bekleme
-  ballSpeedY *= 2;
-  gamestarted = 1;  // Oyunu 2. bölüme başlat
+  delay(5000);
+  ballSpeedY += 2;  // Her yeni levelde topun hızını artır
+  gamestarted = 1;
 }
 
 void setupNextLevel() {
-  // 2. bölüm için tuğla dizaynını ayarla
+  randomSeed(analogRead(0));  // Rastgele sayı üretmek için seed belirle
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 12; j++) {
-      if (i % 2 == 0) {  // Örneğin çift satırlarda tuğlalar farklı bir düzenle olsun
-        blocks[i][j] = (j % 2 == 0);  // Her çift sütunda tuğla olsun
-      } else {
-        blocks[i][j] = (j % 2 != 0);  // Her tek sütunda tuğla olsun
-      }
+      blocks[i][j] = random(100) < 50;  // %50 ihtimal ile blok oluştur
       arrj[i][j] = j * (rectWidth + 1);
       arri[i][j] = i * (rectHeight + 1);
     }
@@ -151,7 +152,7 @@ void setup() {
     {
        arrj[i][j] = j * (rectWidth + 1);
        arri[i][j] = i * (rectHeight + 1);
-       blocks[i][j] = true; // Başlangıçta tüm bloklar var
+       blocks[i][j] = true;
     } 
   }
 }
@@ -161,8 +162,7 @@ void loop() {
     if(ldrread>50){
       color1 = WHITE;
       color2 = BLACK;
-
-      
+   
     }
     else{
       color1 = BLACK;
@@ -292,7 +292,7 @@ void game()
   {
     for(int j = 0;j < 12; j++)
     {
-      if (blocks[i][j]) { // Eğer blok varsa, çiz
+      if (blocks[i][j]) {
         display.fillRect(arrj[i][j] + 10, arri[i][j] + 1, rectWidth, rectHeight, color2);
       }
     }
@@ -346,7 +346,7 @@ void game()
           blocks[i][j] = false;
           score++;
           dropHeart(arrj[i][j], arri[i][j]);
-          break;  // Bir çarpışma bulunduğunda döngüyü kır
+          break;
         }
       }
     }
@@ -363,7 +363,7 @@ void game()
     if (!allDestroyed) break;
   }
 
-  if (allDestroyed && stage_no == 1) {
+  if (allDestroyed) {
     startNextLevel();
   }
 
@@ -396,7 +396,7 @@ void game()
   //tabana çarpıp canın gitmesi
   if (ballY + ballRadius >= SCREEN_HEIGHT) {
     if (millis() - lastHitTime >= delayTime) {
-      lastHitTime = millis(); // En son çarpma zamanını güncelle
+      lastHitTime = millis();
       ballX = SCREEN_WIDTH / 2;
       ballY = SCREEN_HEIGHT / 2;
       delayTime = 0;
